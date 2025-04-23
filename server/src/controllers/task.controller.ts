@@ -72,6 +72,7 @@ export const updateTask = async (
   response: Response
 ): Promise<void> => {
   try {
+    console.log(request.params, request.body);
     const { taskId } = request.params;
     const { status } = request.body;
     const updatedTask = await prisma.task.update({

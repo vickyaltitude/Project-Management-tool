@@ -10,7 +10,7 @@ export interface Project {
 
 export interface User {
   userId?: number;
-  userName: string;
+  username: string;
   email: string;
   profilePictureUrl?: string;
   cognitoId?: number;
@@ -19,14 +19,14 @@ export interface User {
 
 export interface Attachment {
   id: number;
-  fileUrl: string;
+  fileURL: string;
   fileName: string;
   taskId: number;
   uploadedById: number;
 }
 
 export enum Status {
-  ToDo = "To do",
+  ToDo = "To Do",
   WorkInProgress = "Work In Progress",
   UnderReview = "Under Review",
   Completed = "Completed",
@@ -79,8 +79,11 @@ export const api = createApi({
       query: ({ projectId }) => `api/tasks?projectId=${projectId}`,
       providesTags: (result) =>
         result
-          ? result.map(({ id }) => ({ type: "Tasks" as const, id }))
-          : [{ type: "Tasks" as const }],
+          ? [
+              ...result.map(({ id }) => ({ type: "Tasks" as const, id })),
+              { type: "Tasks" },
+            ]
+          : [{ type: "Tasks" }],
     }),
     createTask: build.mutation<Task, Partial<Task>>({
       query: (task) => ({
@@ -90,7 +93,7 @@ export const api = createApi({
       }),
       invalidatesTags: ["Tasks"],
     }),
-    updateTask: build.mutation<Task, { taskId: number; status: string }>({
+    updateTaskStatus: build.mutation<Task, { taskId: number; status: string }>({
       query: ({ taskId, status }) => ({
         url: `api/tasks/${taskId}/status`,
         method: "PATCH",
@@ -98,6 +101,7 @@ export const api = createApi({
       }),
       invalidatesTags: (result, error, { taskId }) => [
         { type: "Tasks", id: taskId },
+        { type: "Tasks" },
       ],
     }),
   }),
@@ -108,4 +112,5 @@ export const {
   useCreateProjectMutation,
   useGetTasksQuery,
   useCreateTaskMutation,
+  useUpdateTaskStatusMutation,
 } = api;
