@@ -7,6 +7,7 @@ import helmet from "helmet";
 /* Route imports */
 import projectRoutes from "./routes/project.route";
 import taskRoutes from "./routes/task.route";
+import searchRoutes from "./routes/searcRoute";
 /* Configs */
 config();
 const app = express();
@@ -25,6 +26,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/projects", projectRoutes);
 app.use("/api/tasks", taskRoutes);
+app.use("/api/search", searchRoutes);
 
 /* Server */
 const port = process.env.PORT || 3000;
